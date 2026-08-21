@@ -1,0 +1,65 @@
+
+; Run parameters
+integrator              = md        ; leap-frog integrator
+nsteps                  = 20000000   ; 0.001 * 20000000 = 20000 ps ; 20 ns
+dt                      = 0.001     ; 1 fs
+
+; Output control
+nstxout                 = 500       ; save coordinates every 0.5  ps
+nstvout                 = 500       ; save velocities every 0.5 ps
+nstfout                 = 500      ; number of steps that elapse between writing forces to output trajectory every 0.5 ps
+nstenergy               = 500      ; save energies every every 0.5 ps
+nstxout-compressed      = 500      ; save compressed coordinates every 0.5 ps
+nstlog                  = 1000     ; update log file every 1 ps
+
+; Bond parameters
+continuation            = yes       ; no: apply contraints to the start configuration and reset shells
+                                    ; yes; do not apply contraints to the starr configuration and do not reset shells, usefulfor exact continuation an reruns
+constraint_algorithm    = lincs     ; holonomic constraints 
+constraints             = all-bonds      ; bonds involving H are constrained
+;lincs_iter              = 1         ; accuracy of LINCS
+;lincs_order             = 4         ; also related to accuracy
+
+; Nonbonded settings 
+cutoff-scheme           = Verlet    ; Buffered neighbor searching
+nstlist                 =100        ;
+rlist                   = 1.0       ;
+ 
+; Electrostatics
+coulombtype             = PME       ; Particle Mesh Ewald for long-range electrostatics
+rcoulomb                = 1.0       ; short - range electrostatic cutoff (in nm)
+
+; Van der Waals settings
+ vdwtype                = Cut-off   ;
+;vdwtype                =PME        ;
+rvdw                    = 1.0       ; short-range van der Waals cuoff (in nm)
+
+;EWALD/PME/PPPM parameters
+pme_order               =4          ; cubic interpolation
+
+;Apply long range dispercion corrections for the Energy an Pressure
+DispCorr                = EnerPres   ; account for cut-off vdW scheme
+
+; Sapacing for the PME/PPPM FFT grid
+fourierspacing          =0.16       ; grid spacing for FFT}
+
+; Temperature coupling is on
+tcoupl                  = V-rescale             ; modified Berendsen thermostat
+tc-grps                 = system             ; two coupling groups - more accurate
+tau_t                   = 0.1                ; time constant, in ps
+ref_t                   = 288.15                ; reference temperature, one for each group, in K
+
+; Pressure coupling is on
+pcoupl                  = C-rescale             ; Parrinello-Rahman     ; Pressure coupling on in NPT
+pcoupltype              = isotropic             ; uniform scaling of box vectors
+tau_p                   = 1.0                   ; time constant, in ps
+ref_p                   = 1.01325               ; reference pressure, in 1.01325 bar (1 atm)
+compressibility         = 4.5e-5                ; isothermal compressibility of water, bar^-1
+refcoord_scaling        = all
+
+; Periodic boundary conditions
+pbc                     = xyz       ; 3-D PBC
+
+
+; Velocity generation
+gen_vel                 = no       ; Velocity generation is off 
