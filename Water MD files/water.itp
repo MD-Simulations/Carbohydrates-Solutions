@@ -1,0 +1,40 @@
+;
+; Note the strange order of atoms to make it faster in gromacs.
+;
+[ moleculetype ]
+; molname	nrexcl
+SOL		2
+
+[ atoms ]
+; id	at type	res nr 	residu name	at name	cg nr	charge
+1	OWT4		1	SOL	 OW	1       0.000
+2	HW		1	SOL	HW1	1	0.527
+3	HW		1	SOL	HW2	1	0.527
+4	IW		1	SOL	 MW	1      -1.054
+
+[ settles ]
+; OW    funct   doh        dhh
+1       1       0.09572    0.15139
+
+[ exclusions ]
+1	2	3	4
+2	1	3	4
+3	1	2	4
+4	1	2	3
+
+; The position of the dummy is computed as follows:
+;
+;		O
+;  	      
+;	    	D
+;	  
+;	H		H
+;
+; const = distance (OD) / [ cos (angle(DOH)) 	* distance (OH) ]
+;	  0.015 nm	/ [ cos (52.26 deg)	* 0.09572 nm	]
+
+; Dummy pos x4 = x1 + a*(x2-x1) + b*(x3-x1)
+
+[ dummies3 ]
+; Dummy from			funct	a		b
+4	1	2	3	1	  0.089608447 0.089608447
